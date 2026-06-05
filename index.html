@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>چک‌لیست کارهای روزانه</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/favicon.png" type="image/png">
+    <style>
+        /* ==================== MODERN ANDROID-INSPIRED DESIGN ==================== */
+        :root {
+            /* Light theme (default) */
+            --bg: #f1f5f9;
+            --bg-gradient: linear-gradient(180deg, #f1f5f9 0%, #e0f2fe 100%);
+            --card: #ffffff;
+            --card-elevated: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #0ea5e9;
+            --accent-dark: #0284c8;
+            --success: #22c55e;
+            --success-bg: #f0fdf4;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.08);
+            --shadow-strong: 0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+            --fab-shadow: 0 10px 15px -3px rgb(14 165 233 / 0.4), 0 4px 6px -4px rgb(14 165 233 / 0.4);
+        }
+
+        .dark {
+            /* Dark theme - beautiful Android night mode */
+            --bg: #0f172a;
+            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e2937 100%);
+            --card: #1e2937;
+            --card-elevated: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-dark: #0ea5e9;
+            --success: #4ade80;
+            --success-bg: #14532d;
+            --border: #334155;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --shadow-strong: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+            --fab-shadow: 0 10px 15px -3px rgb(56 189 248 / 0.4), 0 4px 6px -4px rgb(56 189 248 / 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Vazirmatn", "IRANSans", "Segoe UI", "Tahoma", "B Nazanin", sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            line-height: 1.55;
+            font-size: 15.5px;
+            font-feature-settings: "tnum", "kern";
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 12px 16px 100px; /* space for FAB */
+        }
+
+        /* Header - Android style */
+        .header {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 8px;
+            z-index: 50;
+            border: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 4px 6px -1px rgb(14 165 233 / 0.3);
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-size: 21px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .date {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* Theme Toggle - beautiful */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background: var(--border);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-secondary);
+        }
+        .theme-toggle:hover {
+            background: var(--card-elevated);
+            transform: scale(1.05);
+        }
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Buttons - Material style */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(14 165 233 / 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-secondary {
+            background: var(--card-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 13px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:active {
+            transform: translateY(1px);
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 9999px;
+        }
+
+        /* Task List - very smooth and attractive */
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--card-elevated);
+            padding: 15px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .task-item:active {
+            transform: scale(0.985);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+        }
+        .task-item.completed {
+            background: var(--success-bg);
+            border-color: #86efac;
+            opacity: 0.95;
+        }
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--success);
+        }
+
+        .task-checkbox {
+            width: 26px;
+            height: 26px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            flex-shrink: 0;
+            border-radius: 8px;
+            transition: transform 0.15s ease;
+        }
+        .task-checkbox:active {
+            transform: scale(0.9);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 15.5px;
+            color: var(--text-primary);
+            word-break: break-word;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        .task-badge {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .dark .task-badge {
+            background: #164e63;
+            color: #67e8f9;
+        }
+
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .action-btn:hover {
+            background: var(--border);
+            color: var(--text-secondary);
+        }
+        .action-btn.delete:hover {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        .dark .action-btn.delete:hover {
+            background: #3f1f1f;
+            color: #f87171;
+        }
+
+        /* Progress - attractive */
+        .progress-container {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .progress-percent {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .progress-bar {
+            height: 9px;
+            background: var(--border);
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), #22d3ee);
+            transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+            border-radius: 9999px;
+        }
+
+        /* Add form - inline but nice */
+        .add-inline {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            align-items: center;
+        }
+        .add-input {
+            flex: 1;
+            padding: 13px 18px;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--card-elevated);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .add-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+        }
+        .add-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Notes */
+        .notes-textarea {
+            width: 100%;
+            min-height: 130px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--card-elevated);
+            color: var(--text-primary);
+            resize: vertical;
+            line-height: 1.7;
+            transition: border 0.2s ease;
+        }
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+        }
+
+        /* Reminders - elegant */
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fefce8;
+            border: 1px solid #fde047;
+            padding: 13px 16px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: transform 0.2s ease;
+        }
+        .dark .reminder-item {
+            background: #3f2a0f;
+            border-color: #854d0e;
+        }
+        .reminder-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .reminder-time {
+            background: #eab308;
+            color: white;
+            font-weight: 800;
+            font-size: 12.5px;
+            padding: 5px 11px;
+            border-radius: 9999px;
+            min-width: 62px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .dark .reminder-time {
+            background: #ca8a04;
+        }
+        .reminder-text {
+            font-size: 14.5px;
+            color: #713f12;
+            font-weight: 500;
+        }
+        .dark .reminder-text {
+            color: #fde047;
+        }
+
+        /* FAB - Classic Android floating action button */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            left: auto;
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border: none;
+            border-radius: 9999px;
+            box-shadow: var(--fab-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .fab:hover {
+            transform: scale(1.08);
+        }
+        .fab:active {
+            transform: scale(0.92);
+            box-shadow: 0 4px 6px -1px rgb(14 165 233 / 0.3);
+        }
+        .fab .icon {
+            transition: transform 0.2s ease;
+        }
+        .fab:active .icon {
+            transform: rotate(90deg);
+        }
+
+        /* Modal for Add Task - smooth bottom sheet feel */
+        .modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border-radius: 24px 24px 0 0;
+            box-shadow: var(--shadow-strong);
+            padding: 24px 20px 32px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 200;
+            border: 1px solid var(--border);
+            max-width: 680px;
+            margin: 0 auto;
+        }
+        .modal.show {
+            transform: translateY(0);
+        }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 150;
+            pointer-events: none;
+        }
+        .modal-backdrop.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 9999px;
+            background: var(--border);
+            border: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal .form-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 14px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 15px;
+            background: var(--card-elevated);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 28px 16px;
+            color: var(--text-muted);
+        }
+        .empty-state svg {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        /* Info box */
+        .info-box {
+            background: color-mix(in srgb, var(--accent) 8%, var(--card));
+            border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+            border-radius: 14px;
+            padding: 13px 15px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+
+        /* Toast - smooth */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--bg);
+            padding: 12px 22px;
+            border-radius: 9999px;
+            font-size: 14px;
+            box-shadow: var(--shadow-strong);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            max-width: 90%;
+        }
+
+        /* Animations for smoothness */
+        .task-item {
+            animation: slideIn 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.2s ease forwards;
+        }
+
+        .all-done {
+            text-align: center;
+            padding: 16px;
+            color: var(--success);
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .container { padding: 8px 12px 90px; }
+            .header { padding: 14px 16px; }
+            .header-title { font-size: 19px; }
+            .fab { width: 58px; height: 58px; bottom: 18px; right: 18px; left: auto; font-size: 26px; }
+            .task-item { padding: 13px 14px; }
+        }
+
+        /* Extra polish */
+        .task-item .task-text {
+            transition: color 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">📋</div>
+                <div>
+                    <h1 class="header-title">چک‌لیست روزانه</h1>
+                    <div class="date" id="current-date">در حال بارگذاری...</div>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button onclick="toggleTheme()" class="theme-toggle" id="theme-toggle" title="تغییر حالت روز/شب">
+                    🌙
+                </button>
+                <button onclick="installPWA()" class="btn btn-primary btn-sm" id="install-btn" style="display: none;">
+                    نصب اپ
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="stats">
+                <div class="progress-text" id="progress-text">۰ از ۰ کار انجام شده</div>
+                <div class="progress-percent" id="progress-percent">۰٪</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <button onclick="resetForNewDay()" class="btn btn-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center;">
+                🔄 شروع روز جدید
+            </button>
+        </div>
+
+        <!-- Daily Checklist -->
+        <div class="card">
+            <h2 class="section-title">✅ کارهای امروز</h2>
+            
+            <ul class="task-list" id="task-list">
+                <!-- JS rendered -->
+            </ul>
+            
+            <!-- Quick add inline -->
+            <div class="add-inline">
+                <input type="text" id="new-task-input" class="add-input" placeholder="کار جدید (مثال: ورزش صبحگاهی)" onkeypress="if(event.key === 'Enter') addTaskQuick()">
+                <label class="checkbox-label" style="white-space: nowrap; margin: 0;">
+                    <input type="checkbox" id="new-task-recurring" checked> تکراری
+                </label>
+                <button onclick="addTaskQuick()" class="btn btn-primary" style="padding: 11px 16px; white-space: nowrap;">افزودن</button>
+            </div>
+        </div>
+
+        <!-- Quick Notes -->
+        <div class="card">
+            <h2 class="section-title">📝 یادداشت‌های سریع</h2>
+            <textarea id="notes-textarea" class="notes-textarea" placeholder="هر چیزی که نباید فراموش کنید اینجا بنویسید..."></textarea>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px; text-align: left;">ذخیره خودکار</div>
+        </div>
+
+        <!-- Reminders -->
+        <div class="card">
+            <h2 class="section-title">⏰ یادآوری‌ها</h2>
+            
+            <div style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 110px;">
+                    <div class="form-label">زمان</div>
+                    <input type="time" id="reminder-time" class="form-input" value="08:00">
+                </div>
+                <div style="flex: 2; min-width: 160px;">
+                    <div class="form-label">پیام یادآوری</div>
+                    <input type="text" id="reminder-message" class="form-input" placeholder="مثال: وقت ورزش" value="زمان شروع روز مبارک!">
+                </div>
+                <button onclick="addReminder()" class="btn btn-primary" style="padding: 11px 16px; margin-bottom: 0;">افزودن</button>
+            </div>
+            
+            <div id="reminder-list"></div>
+            
+            <div class="info-box">
+                نوتیفیکیشن‌ها وقتی صفحه باز است فعال می‌شوند. اپ را نصب کنید تا تجربه بهتری داشته باشید.
+            </div>
+            
+            <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <button onclick="testNotification()" class="btn btn-secondary btn-sm">🧪 تست نوتیفیکیشن</button>
+                <button onclick="requestNotificationPermission()" class="btn btn-secondary btn-sm">اجازه نوتیفیکیشن</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 24px 0 8px; font-size: 12px; color: var(--text-muted);">
+            داده‌ها فقط روی دستگاه شما • کاملاً آفلاین • 
+            <a href="#" onclick="exportData()" style="color: var(--text-muted);">خروجی</a>
+        </div>
+    </div>
+
+    <!-- Floating Action Button (Android style) -->
+    <button class="fab" onclick="openAddModal()" title="افزودن کار جدید">
+        <span class="icon">＋</span>
+    </button>
+
+    <!-- Add Task Modal (smooth bottom sheet) -->
+    <div class="modal-backdrop" id="modal-backdrop" onclick="closeAddModal()"></div>
+    <div class="modal" id="add-modal">
+        <div class="modal-header">
+            <div class="modal-title">افزودن کار جدید</div>
+            <button class="modal-close" onclick="closeAddModal()">✕</button>
+        </div>
+        
+        <div>
+            <div class="form-group" style="margin-bottom: 14px;">
+                <div class="form-label">متن کار</div>
+                <input type="text" id="modal-task-input" class="form-input" placeholder="مثلاً: خواندن ۳۰ دقیقه کتاب" onkeypress="if(event.key === 'Enter') addTaskFromModal()">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="modal-recurring" checked>
+                        <span>تکراری هر روز</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button onclick="addTaskFromModal()" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 15.5px; margin-top: 8px;">
+                افزودن به چک‌لیست
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ==================== STATE ====================
+        let tasks = [];
+        let reminders = [];
+        let notes = '';
+        let lastDate = '';
+        let isDark = false;
+
+        // ==================== THEME (DARK MODE) ====================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('dailyChecklist_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                isDark = true;
+            } else {
+                document.documentElement.classList.remove('dark');
+                isDark = false;
+            }
+            updateThemeToggle();
+        }
+
+        function toggleTheme() {
+            isDark = !isDark;
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('dailyChecklist_theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('dailyChecklist_theme', 'light');
+            }
+            updateThemeToggle();
+            
+            // Update status bar color for Android
+            updateThemeColor();
+        }
+
+        function updateThemeToggle() {
+            const btn = document.getElementById('theme-toggle');
+            btn.innerHTML = isDark ? '☀️' : '🌙';
+            btn.title = isDark ? 'حالت روشن' : 'حالت شب';
+        }
+
+        function updateThemeColor() {
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.content = isDark ? '#0f172a' : '#0ea5e9';
+            }
+        }
+
+        // ==================== DATA ====================
+        function loadData() {
+            try {
+                tasks = JSON.parse(localStorage.getItem('dailyChecklist_tasks') || '[]');
+                reminders = JSON.parse(localStorage.getItem('dailyChecklist_reminders') || '[]');
+                notes = localStorage.getItem('dailyChecklist_notes') || '';
+                lastDate = localStorage.getItem('dailyChecklist_lastDate') || '';
+            } catch (e) {
+                tasks = [];
+                reminders = [];
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('dailyChecklist_tasks', JSON.stringify(tasks));
+            localStorage.setItem('dailyChecklist_reminders', JSON.stringify(reminders));
+            localStorage.setItem('dailyChecklist_notes', notes);
+            localStorage.setItem('dailyChecklist_lastDate', lastDate);
+        }
+
+        // ==================== DATE & NEW DAY ====================
+        function getToday() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function formatPersianDate() {
+            const now = new Date();
+            return new Intl.DateTimeFormat('fa-IR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }).format(now);
+        }
+
+        function checkAndHandleNewDay() {
+            const today = getToday();
+            if (lastDate && lastDate !== today) {
+                let resetHappened = false;
+                tasks.forEach(task => {
+                    if (task.recurring) {
+                        task.completed = false;
+                        resetHappened = true;
+                    }
+                });
+                reminders.forEach(rem => {
+                    if (rem.lastNotified === lastDate) rem.lastNotified = null;
+                });
+                lastDate = today;
+                saveData();
+                if (resetHappened) showToast('روز جدید شروع شد • کارهای تکراری ریست شدند');
+            } else if (!lastDate) {
+                lastDate = today;
+                saveData();
+            }
+        }
+
+        function updateDateDisplay() {
+            document.getElementById('current-date').textContent = formatPersianDate();
+        }
+
+        // ==================== TASKS ====================
+        function renderTasks() {
+            const listEl = document.getElementById('task-list');
+            listEl.innerHTML = '';
+            
+            const sorted = [...tasks].sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                return a.recurring ? -1 : 1;
+            });
+            
+            if (sorted.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2v0a2 2 0 002-2M9 5a2 2 0 012-2m0 0a2 2 0 012 2" />
+                        </svg>
+                        <p style="margin: 8px 0 0;">هنوز کاری اضافه نشده.<br>از دکمه + پایین صفحه استفاده کنید.</p>
+                    </div>
+                `;
+                updateProgress();
+                return;
+            }
+            
+            const completedCount = sorted.filter(t => t.completed).length;
+            const allDone = completedCount === sorted.length;
+            
+            sorted.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                    <span class="task-text">${escapeHtml(task.text)}</span>
+                    ${task.recurring ? '<span class="task-badge">هر روز</span>' : ''}
+                    <div class="task-actions">
+                        <button class="action-btn delete" title="حذف">✕</button>
+                    </div>
+                `;
+                
+                const checkbox = li.querySelector('.task-checkbox');
+                checkbox.addEventListener('change', () => {
+                    task.completed = checkbox.checked;
+                    saveData();
+                    renderTasks();
+                });
+                
+                li.querySelector('.action-btn.delete').addEventListener('click', (e) => {
+                    e.stopImmediatePropagation();
+                    if (confirm(`حذف "${task.text}"؟`)) {
+                        tasks = tasks.filter(t => t.id !== task.id);
+                        saveData();
+                        renderTasks();
+                    }
+                });
+                
+                listEl.appendChild(li);
+            });
+            
+            if (allDone) {
+                const doneDiv = document.createElement('div');
+                doneDiv.className = 'all-done';
+                doneDiv.innerHTML = `🎉 عالی! همه کارها انجام شد`;
+                listEl.appendChild(doneDiv);
+            }
+            
+            updateProgress();
+        }
+
+        function addTaskQuick() {
+            const input = document.getElementById('new-task-input');
+            const recurring = document.getElementById('new-task-recurring').checked;
+            const text = input.value.trim();
+            if (!text) return;
+
+            tasks.push({
+                id: Date.now(),
+                text,
+                completed: false,
+                recurring
+            });
+            saveData();
+            input.value = '';
+            renderTasks();
+            showToast('کار اضافه شد');
+        }
+
+        function openAddModal() {
+            const modal = document.getElementById('add-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const input = document.getElementById('modal-task-input');
+            
+            backdrop.classList.add('show');
+            modal.classList.add('show');
+            input.focus();
+            input.select();
+        }
+
+        function closeAddModal() {
+            const modal = document.getElementById('add-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            modal.classList.remove('show');
+            backdrop.classList.remove('show');
+        }
+
+        function addTaskFromModal() {
+            const input = document.getElementById('modal-task-input');
+            const recurring = document.getElementById('modal-recurring').checked;
+            const text = input.value.trim();
+            
+            if (!text) {
+                showToast('لطفاً متن کار را وارد کنید');
+                return;
+            }
+            
+            tasks.push({
+                id: Date.now(),
+                text,
+                completed: false,
+                recurring
+            });
+            saveData();
+            renderTasks();
+            closeAddModal();
+            input.value = '';
+            showToast('کار جدید با موفقیت اضافه شد');
+        }
+
+        function updateProgress() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            document.getElementById('progress-text').textContent = `${completed} از ${total} کار`;
+            document.getElementById('progress-percent').textContent = `${percent}٪`;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+        }
+
+        // ==================== REMINDERS ====================
+        function renderReminders() {
+            const container = document.getElementById('reminder-list');
+            container.innerHTML = '';
+            
+            if (reminders.length === 0) {
+                container.innerHTML = `<div class="empty-state" style="padding:12px 0;"><p style="margin:0;font-size:13.5px;">هنوز یادآوری اضافه نشده</p></div>`;
+                return;
+            }
+            
+            const sorted = [...reminders].sort((a, b) => a.time.localeCompare(b.time));
+            
+            sorted.forEach(reminder => {
+                const div = document.createElement('div');
+                div.className = 'reminder-item';
+                div.innerHTML = `
+                    <div class="reminder-content">
+                        <div class="reminder-time">${reminder.time}</div>
+                        <div class="reminder-text">${escapeHtml(reminder.message)}</div>
+                    </div>
+                    <button class="action-btn delete" style="width:28px;height:28px;">✕</button>
+                `;
+                div.querySelector('.action-btn.delete').addEventListener('click', () => {
+                    if (confirm('یادآوری حذف شود؟')) {
+                        reminders = reminders.filter(r => r.id !== reminder.id);
+                        saveData();
+                        renderReminders();
+                    }
+                });
+                container.appendChild(div);
+            });
+        }
+
+        function addReminder() {
+            const time = document.getElementById('reminder-time').value;
+            const message = document.getElementById('reminder-message').value.trim();
+            if (!time || !message) return showToast('زمان و پیام را وارد کنید');
+
+            reminders.push({
+                id: Date.now(),
+                time,
+                message,
+                lastNotified: null
+            });
+            saveData();
+            renderReminders();
+            document.getElementById('reminder-message').value = '';
+            showToast('یادآوری اضافه شد');
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) return showToast('مرورگر پشتیبانی نمی‌کند');
+            
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+                showToast('نوتیفیکیشن فعال شد ✅');
+                updateNotifButton();
+            } else {
+                showToast('اجازه داده نشد. از تنظیمات مرورگر اجازه بدهید.');
+            }
+        }
+
+        function updateNotifButton() {
+            // Optional visual feedback
+        }
+
+        function testNotification() {
+            if (!('Notification' in window)) return showToast('پشتیبانی نمی‌شود');
+            if (Notification.permission !== 'granted') {
+                return requestNotificationPermission();
+            }
+            new Notification('چک‌لیست روزانه', {
+                body: 'نوتیفیکیشن آزمایشی • سیستم آماده است!',
+                icon: 'icons/icon-192.png'
+            });
+            showToast('نوتیفیکیشن تست ارسال شد');
+        }
+
+        function showNotification(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            try {
+                new Notification(title, { body, icon: 'icons/icon-192.png', tag: 'daily-checklist' });
+            } catch (e) {}
+        }
+
+        let reminderInterval = null;
+        function checkReminders() {
+            if (Notification.permission !== 'granted') return;
+            
+            const now = new Date();
+            const currentTime = now.toTimeString().slice(0, 5);
+            const today = getToday();
+            let changed = false;
+
+            reminders.forEach(rem => {
+                if (rem.time === currentTime && rem.lastNotified !== today) {
+                    showNotification('یادآوری روزانه', rem.message);
+                    rem.lastNotified = today;
+                    changed = true;
+                }
+            });
+            
+            if (changed) saveData();
+        }
+
+        // ==================== PWA ====================
+        let deferredPrompt = null;
+
+        function setupPWA() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const btn = document.getElementById('install-btn');
+                if (btn) btn.style.display = 'inline-flex';
+            });
+
+            window.addEventListener('appinstalled', () => {
+                const btn = document.getElementById('install-btn');
+                if (btn) btn.style.display = 'none';
+                showToast('اپلیکیشن نصب شد! 🎉');
+            });
+        }
+
+        async function installPWA() {
+            if (!deferredPrompt) {
+                showToast('از منوی مرورگر (⋮) گزینه «افزودن به هوم‌اسکرین» را انتخاب کنید.');
+                return;
+            }
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            document.getElementById('install-btn').style.display = 'none';
+        }
+
+        // ==================== UTILS ====================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = message;
+            toast.style.display = 'flex';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2600);
+        }
+
+        function resetForNewDay() {
+            if (!confirm('چک‌لیست برای امروز ریست شود؟')) return;
+            
+            tasks.forEach(t => { if (t.recurring) t.completed = false; });
+            reminders.forEach(r => r.lastNotified = null);
+            lastDate = getToday();
+            saveData();
+            renderTasks();
+            renderReminders();
+            showToast('روز جدید شروع شد');
+        }
+
+        function setupNotes() {
+            const ta = document.getElementById('notes-textarea');
+            ta.value = notes;
+            
+            let t;
+            ta.addEventListener('input', () => {
+                notes = ta.value;
+                clearTimeout(t);
+                t = setTimeout(saveData, 700);
+            });
+        }
+
+        function exportData() {
+            const data = { tasks, reminders, notes, exported: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `checklist-${getToday()}.json`;
+            a.click();
+        }
+
+        function initSampleDataIfEmpty() {
+            if (tasks.length === 0) {
+                tasks = [
+                    { id: 101, text: 'ورزش صبحگاهی یا پیاده‌روی', completed: false, recurring: true },
+                    { id: 102, text: 'نوشیدن آب کافی', completed: false, recurring: true },
+                    { id: 103, text: 'چک کردن پیام‌ها و ایمیل', completed: false, recurring: true },
+                    { id: 104, text: '۳۰ دقیقه مطالعه یا یادگیری', completed: false, recurring: true },
+                    { id: 105, text: 'تمرین زبان', completed: false, recurring: false }
+                ];
+            }
+            if (reminders.length === 0) {
+                reminders = [
+                    { id: 201, time: '07:30', message: 'زمان ورزش و شروع روز', lastNotified: null },
+                    { id: 202, time: '12:30', message: 'یادآوری ناهار و استراحت', lastNotified: null }
+                ];
+            }
+            if (!lastDate) lastDate = getToday();
+            saveData();
+        }
+
+        // ==================== INIT ====================
+        function init() {
+            loadData();
+            initTheme();
+            updateThemeColor();
+            setupPWA();
+            
+            checkAndHandleNewDay();
+            if (tasks.length === 0) initSampleDataIfEmpty();
+            
+            updateDateDisplay();
+            renderTasks();
+            renderReminders();
+            setupNotes();
+            
+            // Initial checks
+            checkReminders();
+            if (reminderInterval) clearInterval(reminderInterval);
+            reminderInterval = setInterval(checkReminders, 55000);
+            
+            // Date auto update
+            setInterval(() => {
+                const today = getToday();
+                if (today !== lastDate) {
+                    checkAndHandleNewDay();
+                    updateDateDisplay();
+                    renderTasks();
+                }
+            }, 4 * 60 * 1000);
+            
+            // Keyboard shortcut
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    document.getElementById('new-task-input').focus();
+                }
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('add-modal');
+                    if (modal.classList.contains('show')) closeAddModal();
+                }
+            });
+            
+            // Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+            
+            // Welcome
+            if (!localStorage.getItem('dailyChecklist_welcomed_v2')) {
+                setTimeout(() => {
+                    showToast('خوش آمدید! از دکمه + برای افزودن کار استفاده کنید');
+                    localStorage.setItem('dailyChecklist_welcomed_v2', 'true');
+                }, 1400);
+            }
+            
+            // Make sure modal closes on escape already handled
+            console.log('%c[Daily Checklist] Android-optimized PWA ready — smooth & beautiful', 'color:#38bdf8');
+        }
+
+        window.onload = init;
+
+        // Debug helpers
+        window.DC = {
+            reset: () => { localStorage.clear(); location.reload(); },
+            data: () => ({tasks, reminders})
+        };
+    </script>
+</body>
+</html>

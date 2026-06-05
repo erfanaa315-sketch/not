@@ -1,0 +1,43 @@
+{
+  "name": "چک‌لیست کارهای روزانه",
+  "short_name": "چک‌لیست روزانه",
+  "description": "چک‌لیست روزانه، یادداشت و یادآوری برای کارهای روزمره. قابل نصب روی کامپیوتر و اندروید.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "fa",
+  "dir": "rtl",
+  "shortcuts": [
+    {
+      "name": "افزودن کار جدید",
+      "short_name": "کار جدید",
+      "description": "اضافه کردن سریع یک کار به چک‌لیست",
+      "url": "./index.html#add-task",
+      "icons": [
+        { "src": "icons/icon-192.png", "sizes": "192x192" }
+      ]
+    },
+    {
+      "name": "یادداشت‌ها",
+      "short_name": "یادداشت",
+      "description": "باز کردن بخش یادداشت‌های سریع",
+      "url": "./index.html#notes"
+    }
+  ]
+}
